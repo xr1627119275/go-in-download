@@ -5,6 +5,7 @@
     <title>下载</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         iframe {
@@ -12,9 +13,16 @@
             width: 100%;
             min-height: 500px;
         }
+        .page-full,.page-list {
+            width: 1050px !important;
+        }
+        @media screen and (max-width: 600px) {
+            .page-full,.page-list {
+                width: 100vw !important;
+            }
+        }
     </style>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
 
 </head>
