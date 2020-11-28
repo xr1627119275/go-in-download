@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>下载</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        iframe {
+            border: 1px solid #e6e6e6;
+            width: 100%;
+            min-height: 500px;
+        }
+    </style>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+<body>
+
+
+    <div class="page-full" style="width: 1050px;margin: 0 auto;text-align: center">
+        <div class="page-list" style="width: 1050px">
+            <h2>代下网站</h2>
+            <br/>
+            <div class="input-group">
+                <span class="input-group-addon">下载地址</span>
+                <input id="url" type="text" class="form-control" value="" placeholder="https:// 或 http://">
+                <span class="input-group-btn"><button class="btn" type="button" onclick="Download()"  >下载</button></span>
+            </div>
+            <div style="padding-top: 10px ">
+                <progress id="progress" value= '0'  max= '100' style="height: 40px;
+    width: 100%;"></progress>
+            </div>
+            <div class="input-group" style="display: none" id="res_url">
+                <span class="input-group-addon">转换后网址</span>
+                <input type="text" class="form-control" value="" id="cdn1">
+                <span class="input-group-btn"><button class="btn" type="button" onclick="">下载</button></span>
+            </div>
+        </div>
+        <h2>文件库</h2>
+        <iframe src="">
+
+        </iframe>
+    </div>
+
+<script>
+    var DownloadID
+    var isSuccess
+
+    $(function () {
+        refreshFrame()
+    })
+    function Download() {
+        var url = $("#url").val().trim()
+
+        $.get("/api/download?url="+url, undefined, function (data) {
+            console.log(data)
+
+            if (data && data.id) {
+                $("#res_url").hide()
+                $("#progress").attr("max",100)
+                $("#progress").val(0)
+                isSuccess = false
+                DownloadID = setInterval(function() { GetProgress(data.id) }, 200)
+            }
+        })
+
+    }
+
+    function GetProgress(id) {
+        $.get("/api/progress?id="+id, undefined, function (data) {
+            if (data && data.Downloader) {
+                let {total, current} = data.Downloader
+                if (current >= total) {
+
+                    clearInterval(DownloadID)
+                    refreshFrame()
+                    let fullPath = location.origin + "/files/"+data.file_name
+                    console.log(fullPath)
+                    $("#res_url #cdn1").val(fullPath)
+                    $("#res_url button").attr("onclick",`location.href = "${fullPath}";`)
+                    $("#res_url").show()
+                    isSuccess = true
+                    $("#progress").attr("max",total)
+                    $("#progress").val(current)
+                }
+
+                if (!isSuccess) {
+                    $("#progress").attr("max",total)
+                    $("#progress").val(current)
+                }
+
+            }
+        })
+    }
+
+    function refreshFrame(){
+        $('iframe').attr("src", '/files?t='+new Date().getTime())
+    }
+</script>
+</body>
+</html>
