@@ -127,7 +127,7 @@ func DownloadFile(url, filePath string) (*Manage, error) {
 
 func download(c *gin.Context) {
 	url, _ := c.GetQuery("url")
-	manage, _ := DownloadFile(url, "file")
+	manage, _ := DownloadFile(url, FileDir)
 	//if err != nil {
 	//	c.JSON(200, gin.H{ "ID": "" })
 	//}
@@ -147,7 +147,15 @@ func progress(c *gin.Context) {
 	c.JSON(200, nil)
 }
 
+const FileDir = "./file"
+
 func main() {
+
+	_, err := os.Stat(FileDir)
+	if err != nil {
+		os.Mkdir(FileDir, os.ModePerm)
+	}
+
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
@@ -156,7 +164,7 @@ func main() {
 		router.GET("/api/download", download)
 		router.GET("/api/progress", progress)
 		router.StaticFS("/static", http.Dir("./html"))
-		router.StaticFS("/api/file", http.Dir("./file"))
+		router.StaticFS("/api/file", http.Dir(FileDir))
 
 		router.Run(":1280")
 	}()
