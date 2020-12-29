@@ -64,7 +64,7 @@
     function Download() {
         var url = $("#url").val().trim()
 
-        $.get("/api/download?url="+url, undefined, function (data) {
+        $.get("/api/download?t="+parseInt(prompt("保留时间（分钟）默认为5分钟") || 5)+"&url="+url, undefined, function (data) {
             console.log(data)
 
             if (data && data.id) {

@@ -52,7 +52,7 @@ func (d *Downloader) Read(p []byte) (n int, err error) {
 	//}
 	return
 }
-func DownloadFile(url, filePath string) (*Manage, error) {
+func DownloadFile(url, filePath string, timing int) (*Manage, error) {
 	manage := &Manage{
 		ID:         strconv.Itoa(int(time.Now().UnixNano())),
 		FileName:   "",
@@ -106,7 +106,7 @@ func DownloadFile(url, filePath string) (*Manage, error) {
 			}
 
 			go func() {
-				time.Sleep(time.Minute * 5)
+				time.Sleep(time.Minute * time.Duration(timing))
 				err := os.Remove(path.Join(filePath, filename))
 				if err != nil {
 					log.Printf("%v 删除文件出错: %v", filename, err.Error())
@@ -127,7 +127,9 @@ func DownloadFile(url, filePath string) (*Manage, error) {
 
 func download(c *gin.Context) {
 	url, _ := c.GetQuery("url")
-	manage, _ := DownloadFile(url, FileDir)
+	t, _ := c.GetQuery("t")
+	timing, _ := strconv.Atoi(t)
+	manage, _ := DownloadFile(url, FileDir, timing)
 	//if err != nil {
 	//	c.JSON(200, gin.H{ "ID": "" })
 	//}
@@ -147,13 +149,13 @@ func progress(c *gin.Context) {
 	c.JSON(200, nil)
 }
 
-const FileDir = "./file"
+const FileDir = "./static/files"
 
 func main() {
 
 	_, err := os.Stat(FileDir)
 	if err != nil {
-		os.Mkdir(FileDir, os.ModePerm)
+		_ = os.MkdirAll(FileDir, os.ModePerm)
 	}
 
 	wg := &sync.WaitGroup{}
@@ -161,10 +163,11 @@ func main() {
 	go func() {
 
 		router := gin.Default()
-		router.GET("/api/download", download)
-		router.GET("/api/progress", progress)
-		router.StaticFS("/static", http.Dir("./html"))
-		router.StaticFS("/api/file", http.Dir(FileDir))
+		api := router.Group("/")
+		api.GET("/api/download", download)
+		api.GET("/api/progress", progress)
+
+		router.StaticFS("/download", http.Dir("./static"))
 
 		router.Run(":1280")
 	}()

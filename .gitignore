@@ -1,6 +1,6 @@
 .idea
 .idea/*
 build.bat
-file
-file/*
+static/files
+static/files/*
 tmp
