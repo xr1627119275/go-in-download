@@ -163,11 +163,13 @@ func main() {
 	go func() {
 
 		router := gin.Default()
-		api := router.Group("/")
-		api.GET("/api/download", download)
-		api.GET("/api/progress", progress)
+		router.GET("/", func(c *gin.Context) {
+			c.File("./static/index.html")
+		})
+		router.GET("/api/download", download)
+		router.GET("/api/progress", progress)
 
-		router.StaticFS("/download", http.Dir("./static"))
+		router.StaticFS("/files", http.Dir("./static/files"))
 
 		router.Run(":1280")
 	}()
