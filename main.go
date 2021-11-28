@@ -152,7 +152,7 @@ func progress(c *gin.Context) {
 func upload(c *gin.Context) {
 	file, _ := c.FormFile("file")
 	c.SaveUploadedFile(file, path.Join(UploadDir, file.Filename))
-	c.String(200, fmt.Sprintf("%s/files/upload/%s",c.Request.Host, file.Filename))
+	c.JSON(0, map[string]string{"code": "0", "url": fmt.Sprintf("/files/upload/%s", file.Filename)})
 }
 
 const FileDir = "./static/files"
@@ -173,6 +173,9 @@ func main() {
 		router := gin.Default()
 		router.GET("/", func(c *gin.Context) {
 			c.File("./static/index.html")
+		})
+		router.GET("/addContent.html", func(c *gin.Context) {
+			c.File("./static/addContent.html")
 		})
 
 		rApi := router.Group("/api")

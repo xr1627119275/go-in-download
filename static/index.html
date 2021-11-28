@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>下载</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
@@ -13,139 +13,216 @@
             width: 100%;
             min-height: 500px;
         }
-        .page-full,.page-list {
+
+        .page-full, .page-list {
             width: 1050px !important;
         }
+
         @media screen and (max-width: 600px) {
-            .page-full,.page-list {
+            .page-full, .page-list {
                 width: 100vw !important;
             }
         }
+
         .upload-box {
             width: 100%;
             border: 1px solid #ccc;
-            display: flex;text-align: center;
+            display: flex;
+            text-align: center;
         }
+
         .upload-box input[type="file"] {
             width: 100%;
         }
     </style>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- 引入 layui.css -->
-    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css" />
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css"/>
     <!-- 引入 layui.js -->
-    <script src="//unpkg.com/layui@2.6.8/dist/layui.js" ></script>
+    <script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
 
     <style>
         .layui-form-item.one-line {
             display: flex;
         }
+
         .layui-input-inline {
             flex: 1;
         }
     </style>
-    </head>
+</head>
 <body>
 
 
-    <div class="page-full" style="width: 1050px;margin: 0 auto;text-align: center">
-        <div class="page-list" style="width: 1050px">
-            <h2>代下网站</h2>
-            <br/>
-
-            <form class="layui-form layui-form-pane" action="">
-                <div class="layui-form-item one-line">
-                    <label class="layui-form-label">下载地址</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="url"  name="title" placeholder="请输入下载地址" autocomplete="off" class="layui-input">
-                    </div>
-                    <button class="layui-btn" onclick="Download()" >下载</button>
+<div class="page-full" style="width: 1050px;margin: 0 auto;text-align: center">
+    <div class="page-list" style="width: 1050px">
+        <blockquote class="layui-elem-quote" style="margin-top: 100px">代下网站</blockquote>
+        <br>
+        <br>
+        <form class="layui-form layui-form-pane" action="" lay-filter="form">
+            <div class="layui-form-item one-line">
+                <label class="layui-form-label">下载地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="url" name="title" placeholder="请输入下载地址" autocomplete="off"
+                           class="layui-input">
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">转换后网址</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="title" id="res_url" autocomplete="off" class="layui-input">
-                    </div>
+                <button class="layui-btn" onclick="Download()">下载</button>
+            </div>
+            <div class="layui-form-item one-line" id="res_url" style="display: none">
+                <label class="layui-form-label">转换后网址</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="title" id="cdn1" autocomplete="off" class="layui-input">
                 </div>
-            </form>
-
-<!--            <div class="input-group">-->
-<!--                <span class="input-group-addon">下载地址</span>-->
-<!--                <input id="url" type="text" class="form-control" value="" placeholder="https:// 或 http://">-->
-<!--                <span class="input-group-btn"><button class="btn" type="button" onclick="Download()"  >下载</button></span>-->
-<!--            </div>-->
-            <div style="padding-top: 10px ">
-                <progress id="progress" value= '0'  max= '100' style="height: 40px;
-    width: 100%;"></progress>
+                <button class="layui-btn" >下载</button>
             </div>
 
-                <form id="upload-form" class="upload-box" action="/api/upload" method="POST" enctype="multipart/form-data">
-                    <input id="file" name="file" type="file">
-                    <button id="upload">上传</button>
-                </form>
-        </div>
-        <h2>文件库</h2>
-        <iframe src="">
+            <div class="layui-progress layui-progress-big" lay-showPercent="yes" style="margin: 20px 0" lay-filter="download">
+                <div class="layui-progress-bar layui-bg-green" lay-percent=""></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">上传文件</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传文件
+                    </button>
+                </div>
+            </div>
 
-        </iframe>
+            <div class="layui-form-item one-line" id="upload_url" style="display: none">
+                <label class="layui-form-label">上传后网址</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="title" autocomplete="off" class="layui-input">
+                </div>
+                <button class="layui-btn" lay-click="uploadCopy">复制</button>
+            </div>
+            <div class="layui-form-item " >
+                <button class="layui-btn" lay-click="addContent">上传文本</button>
+            </div>
+        </form>
+
     </div>
+    <blockquote class="layui-elem-quote" >文件库</blockquote>
+    <iframe src="">
+
+    </iframe>
+</div>
 
 <script>
     var DownloadID
     var isSuccess
-    layui.use(['form'], function() {
-        var form = layui.form;
-        form.render()
-    })
+
+
     $(function () {
         refreshFrame()
     })
+
+    layui.use(['form', 'element', 'upload', 'layer', 'util'], function () {
+        var form = layui.form;
+        var element = layui.element;
+        var util = layui.util;
+        var layer = layui.layer;
+        var upload = layui.upload;
+
+        form.render()
+
+        window.setDownloadProgress = function (n) {
+            let percent = n + '%'
+            element.progress('download', percent);
+        }
+        form.on('submit(form)', function(data){
+            return false;
+        })
+        util.event('lay-click', {
+            uploadCopy: function(othis){
+                layer.msg('复制成功');
+            },
+            addContent: function() {
+                layer.open({
+                    type: 2,
+                    title: '添加文本',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['800px', '620px'],
+                    content: 'addContent.html' //iframe的url
+                });
+            },
+        });
+        upload.render({
+            elem: '#test1' //绑定元素
+            , url: '/api/upload' //上传接口
+            ,before: function() {
+                $("#upload_url").hide()
+                setDownloadProgress(0)
+            }
+            , done: function (res) {
+                //上传完毕回调
+                console.log(res)
+                $("#upload_url").show()
+                var url = `${location.origin}${res.url}`
+                $("#upload_url button").attr("data-clipboard-text",url);
+                $("#upload_url input").val(url)
+                new ClipboardJS("#upload_url button");
+                setDownloadProgress(100)
+                layer.msg('上传成功');
+            }
+            , error: function (err) {
+                //请求异常回调
+                console.log(err)
+                layer.msg('上传失败');
+            }, progress: function(n, elem){
+                var percent = n + '%'
+                element.progress('download', percent);
+            }
+        })
+
+    })
+
     function Download() {
         var url = $("#url").val().trim()
 
-        $.get("/api/download?t="+parseInt(prompt("保留时间（分钟）默认为5分钟") || 5)+"&url="+url, undefined, function (data) {
+        $.get("/api/download?t=" + parseInt(prompt("保留时间（分钟）默认为5分钟") || 5) + "&url=" + url, undefined, function (data) {
             console.log(data)
 
             if (data && data.id) {
                 $("#res_url").hide()
-                $("#progress").attr("max",100)
-                $("#progress").val(0)
+                DownloadID = setInterval(function () {
+                    GetProgress(data.id)
+                }, 200)
+                setDownloadProgress(0)
                 isSuccess = false
-                DownloadID = setInterval(function() { GetProgress(data.id) }, 200)
+
             }
         })
 
     }
 
     function GetProgress(id) {
-        $.get("/api/progress?id="+id, undefined, function (data) {
+        $.get("/api/progress?id=" + id, undefined, function (data) {
             if (data && data.Downloader) {
                 let {total, current} = data.Downloader
                 if (current >= total) {
-
                     clearInterval(DownloadID)
                     refreshFrame()
-                    let fullPath = location.origin + "/files/"+data.file_name
+                    let fullPath = location.origin + "/files/" + data.file_name
                     console.log(fullPath)
                     $("#res_url #cdn1").val(fullPath)
-                    $("#res_url button").attr("onclick",`location.href = "${fullPath}";`)
+                    $("#res_url button").attr("onclick", `location.href = "${fullPath}";`)
                     $("#res_url").show()
                     isSuccess = true
-                    $("#progress").attr("max",total)
-                    $("#progress").val(current)
+                    setDownloadProgress((current / total ).toFixed(0) * 100)
                 }
 
                 if (!isSuccess) {
-                    $("#progress").attr("max",total)
-                    $("#progress").val(current)
+                    setDownloadProgress((current / total).toFixed(0) * 100)
                 }
 
             }
         })
     }
 
-    function refreshFrame(){
-        $('iframe').attr("src", '/files/?t='+new Date().getTime())
+    function refreshFrame() {
+        $('iframe').attr("src", '/files/?t=' + new Date().getTime())
     }
 </script>
 </body>

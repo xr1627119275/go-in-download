@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Content</title>
+    <!-- 引入 layui.css -->
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css"/>
+    <!-- 引入 layui.js -->
+    <script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+<textarea class="layui-textarea" id="LAY_demo1" style="display: none;"></textarea>
+<form class="layui-form layui-form-pane" lay-filter="form" style="padding-top: 10px;">
+    <div class="layui-form-item" id="url" style=" display: none">
+        <label class="layui-form-label">文件url</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" placeholder="文件url" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <button class="layui-btn" onclick="upload()">上传</button>
+    </div>
+
+</form>
+<script>
+    layui.use(['layedit', 'form', 'layer'], function () {
+        var layedit = layui.layedit;
+        var layer = layui.layer;
+        var form = layui.form;
+        form.render()
+
+        var index1 = layedit.build('LAY_demo1', {
+            tool: ['strong', 'italic', 'underline', 'del', '|', 'left', 'center', 'right'],
+            height: 400
+        });
+
+        console.log(layedit, index1)
+        window.upload = function () {
+            $("#url").hide()
+            var file;
+            var data = [];
+            data.push(layedit.getContent(index1))
+            var properties = {type: 'text/html'}; // Specify the file's mime-type.
+            try {
+                  // Specify the filename using the File constructor, but ...
+                  file = new File(data, new Date().toLocaleDateString().replaceAll("/","_") +  '_' + new Date().getTime() + ".html", properties);
+                } catch (e) {
+                  // ... fall back to the Blob constructor if that isn't supported.
+                  file = new Blob(data, properties);
+                }
+            /* FormData 是表单数据类 */
+            var fd = new FormData();
+            /* 把文件添加到表单里 */
+            fd.append("file", file);
+            $.ajax({
+                url: "/api/upload",
+                type: 'post',
+                data: fd,
+                contentType: false, // 不设置内容类型
+                processData: false, // 不处理数据
+                success:function (data) {
+                    $("#url").show()
+                    $("#url input").val(`${location.origin}${data.url}`)
+                    layer.msg('上传成功')
+                }
+            })
+
+        }
+        form.on('submit(form)', function(data){
+            return false;
+        })
+
+
+    })
+</script>
+</body>
+</html>
