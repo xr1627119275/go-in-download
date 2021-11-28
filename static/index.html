@@ -21,6 +21,14 @@
                 width: 100vw !important;
             }
         }
+        .upload-box {
+            width: 100%;
+            border: 1px solid #ccc;
+            display: flex;text-align: center;
+        }
+        .upload-box input[type="file"] {
+            width: 100%;
+        }
     </style>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -36,9 +44,10 @@
             <div class="input-group">
                 <span class="input-group-addon">下载地址</span>
                 <input id="url" type="text" class="form-control" value="" placeholder="https:// 或 http://">
-                <span class="input-group-btn"><button class="btn" type="button" onclick="Download()"  >下载</button></span>
+                <span class="input-group-btn"><button class="btn" type="button" onclick="Download()">下载</button></span>
             </div>
-            <div style="padding-top: 10px ">
+
+            <div style="padding-top: 10px">
                 <progress id="progress" value= '0'  max= '100' style="height: 40px;
     width: 100%;"></progress>
             </div>
@@ -47,6 +56,11 @@
                 <input type="text" class="form-control" value="" id="cdn1">
                 <span class="input-group-btn"><button class="btn" type="button" onclick="">下载</button></span>
             </div>
+
+                <form id="upload-form" class="upload-box" action="/api/upload" method="POST" enctype="multipart/form-data">
+                    <input id="file" name="file" type="file">
+                    <button id="upload">上传</button>
+                </form>
         </div>
         <h2>文件库</h2>
         <iframe src="">
@@ -78,6 +92,25 @@
 
     }
 
+    $(function () {
+        // $("#upload").click(function () {
+        //     var formData = new FormData($('#upload-form')[0]);
+        //     $.ajax({
+        //         type: 'post',
+        //         url: "/api/upload",
+        //         data: formData,
+        //         cache: false,
+        //         processData: false,
+        //         contentType: false,
+        //     }).success(function (data) {
+        //         $("#res_url #cdn1").val(`${location.protocol}//${data}`)
+        //         $("#res_url button").attr("onclick",`location.href = "${data}";`)
+        //         $("#res_url").show()
+        //     }).error(function () {
+        //         alert("上传失败");
+        //     })
+        // })
+    })
     function GetProgress(id) {
         $.get("/api/progress?id="+id, undefined, function (data) {
             if (data && data.Downloader) {

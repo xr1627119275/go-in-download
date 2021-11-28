@@ -149,7 +149,14 @@ func progress(c *gin.Context) {
 	c.JSON(200, nil)
 }
 
+func upload(c *gin.Context) {
+	file, _ := c.FormFile("file")
+	c.SaveUploadedFile(file, path.Join(UploadDir, file.Filename))
+	c.String(200, fmt.Sprintf("%s/files/upload/%s",c.Request.Host, file.Filename))
+}
+
 const FileDir = "./static/files"
+const UploadDir = FileDir + "/upload"
 
 func main() {
 
@@ -157,6 +164,7 @@ func main() {
 	if err != nil {
 		_ = os.MkdirAll(FileDir, os.ModePerm)
 	}
+	_ = os.MkdirAll(UploadDir, os.ModePerm)
 
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
@@ -166,8 +174,11 @@ func main() {
 		router.GET("/", func(c *gin.Context) {
 			c.File("./static/index.html")
 		})
-		router.GET("/api/download", download)
-		router.GET("/api/progress", progress)
+
+		rApi := router.Group("/api")
+		rApi.GET("/download", download)
+		rApi.GET("/progress", progress)
+		rApi.POST("/upload", upload)
 
 		router.StaticFS("/files", http.Dir("./static/files"))
 
