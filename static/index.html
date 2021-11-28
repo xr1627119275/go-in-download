@@ -21,6 +21,14 @@
                 width: 100vw !important;
             }
         }
+        .upload-box {
+            width: 100%;
+            border: 1px solid #ccc;
+            display: flex;text-align: center;
+        }
+        .upload-box input[type="file"] {
+            width: 100%;
+        }
     </style>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- 引入 layui.css -->
@@ -38,14 +46,10 @@
     </style>
     </head>
 <body>
-    <div>
 
-    </div>
 
     <div class="page-full" style="width: 1050px;margin: 0 auto;text-align: center">
         <div class="page-list" style="width: 1050px">
-            <br/>
-
             <h2>代下网站</h2>
             <br/>
 
@@ -75,11 +79,10 @@
     width: 100%;"></progress>
             </div>
 
-<!--            <div class="input-group" style="display: none" id="res_url">-->
-<!--                <span class="input-group-addon">转换后网址</span>-->
-<!--                <input type="text" class="form-control" value="" id="cdn1">-->
-<!--                <span class="input-group-btn"><button class="btn" type="button" onclick="">下载</button></span>-->
-<!--            </div>-->
+                <form id="upload-form" class="upload-box" action="/api/upload" method="POST" enctype="multipart/form-data">
+                    <input id="file" name="file" type="file">
+                    <button id="upload">上传</button>
+                </form>
         </div>
         <h2>文件库</h2>
         <iframe src="">
