@@ -23,30 +23,63 @@
         }
     </style>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 引入 layui.css -->
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css" />
+    <!-- 引入 layui.js -->
+    <script src="//unpkg.com/layui@2.6.8/dist/layui.js" ></script>
 
-
-</head>
+    <style>
+        .layui-form-item.one-line {
+            display: flex;
+        }
+        .layui-input-inline {
+            flex: 1;
+        }
+    </style>
+    </head>
 <body>
+    <div>
 
+    </div>
 
     <div class="page-full" style="width: 1050px;margin: 0 auto;text-align: center">
         <div class="page-list" style="width: 1050px">
+            <br/>
+
             <h2>代下网站</h2>
             <br/>
-            <div class="input-group">
-                <span class="input-group-addon">下载地址</span>
-                <input id="url" type="text" class="form-control" value="" placeholder="https:// 或 http://">
-                <span class="input-group-btn"><button class="btn" type="button" onclick="Download()"  >下载</button></span>
-            </div>
+
+            <form class="layui-form layui-form-pane" action="">
+                <div class="layui-form-item one-line">
+                    <label class="layui-form-label">下载地址</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="url"  name="title" placeholder="请输入下载地址" autocomplete="off" class="layui-input">
+                    </div>
+                    <button class="layui-btn" onclick="Download()" >下载</button>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">转换后网址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" id="res_url" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </form>
+
+<!--            <div class="input-group">-->
+<!--                <span class="input-group-addon">下载地址</span>-->
+<!--                <input id="url" type="text" class="form-control" value="" placeholder="https:// 或 http://">-->
+<!--                <span class="input-group-btn"><button class="btn" type="button" onclick="Download()"  >下载</button></span>-->
+<!--            </div>-->
             <div style="padding-top: 10px ">
                 <progress id="progress" value= '0'  max= '100' style="height: 40px;
     width: 100%;"></progress>
             </div>
-            <div class="input-group" style="display: none" id="res_url">
-                <span class="input-group-addon">转换后网址</span>
-                <input type="text" class="form-control" value="" id="cdn1">
-                <span class="input-group-btn"><button class="btn" type="button" onclick="">下载</button></span>
-            </div>
+
+<!--            <div class="input-group" style="display: none" id="res_url">-->
+<!--                <span class="input-group-addon">转换后网址</span>-->
+<!--                <input type="text" class="form-control" value="" id="cdn1">-->
+<!--                <span class="input-group-btn"><button class="btn" type="button" onclick="">下载</button></span>-->
+<!--            </div>-->
         </div>
         <h2>文件库</h2>
         <iframe src="">
@@ -57,7 +90,10 @@
 <script>
     var DownloadID
     var isSuccess
-
+    layui.use(['form'], function() {
+        var form = layui.form;
+        form.render()
+    })
     $(function () {
         refreshFrame()
     })
