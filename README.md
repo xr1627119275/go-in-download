@@ -8,7 +8,7 @@
         --name=download \
         -v /var/files:/bin/static/files \
         --privileged \
-        -p 1280:80 \
+        -p 80:1280 \
         --restart=always \
         -itd \
         xr1627119275/go-in-download
